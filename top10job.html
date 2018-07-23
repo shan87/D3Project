@@ -72,6 +72,8 @@ rect:hover {
 </div>
 </div>
 
+<h4 align="center">Top 10 Job Roles in H1B Application - 2017</h4>
+
 <div id="container" class="svg-container">
 <svg width="1" height="1">
 <defs>
@@ -206,13 +208,7 @@ d3.csv("Top10Job.csv", function(error, data) {
             .attr("marker-end","url(#arrow)");
     });
 	
-		g.append("text")
-        .attr("x", (width / 2))             
-        .attr("y", 0 - (margin.top/5))
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px") 
-		.style("font-width", "bold")
-        .text("Job Roles Vs Application Count");
+
 </script>
 
 
