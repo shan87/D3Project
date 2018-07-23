@@ -3,10 +3,8 @@
 
 <style>
 
-.line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 3px;
+rect:hover {
+  fill-opacity:0.5;
 }
  
 .axis {
@@ -23,6 +21,18 @@
 
 .x.axis path {
   display: none;
+}
+
+.toolTip {
+  position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #000000;
+  padding: 14px;
+  text-align: center;
+  border-radius:5px;
 }
 </style>
   
@@ -78,37 +88,26 @@ var svg = d3.select("div#container")
 var margin = {top: 45, right: 20, bottom: 20, left:70},
     width = 680,
     height = 280;
-
-var parseTime = d3.timeParse("%Y")
-    bisectDate = d3.bisector(function(d) { return d.year; }).left;
-
-var line = d3.line()
-    .x(function(d) { return x(d.year); })
-    .y(function(d) { return y(d.days); });
-
+  
 var tooltip = d3.select("body").append("div").attr("class", "toolTip");
 
-var x = d3.scaleTime().range([0, width]);
-var y = d3.scaleLinear().range([height, 0]);
+var x = d3.scaleBand().rangeRound([0, width]).padding(0.2),
+    y = d3.scaleLinear().rangeRound([height, 0]);
   
 var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 d3.csv("cap.csv", function(error, data) {
-    
-	
-	data.forEach(function(d) {
+      data.forEach(function(d) {
     d.days = +d.days;
-	d.year = parseTime(d.year);
 	});
-    x.domain(d3.extent(data, function(d) { return d.year; }));
-    y.domain([d3.min(data, function(d) { return d.days; }), d3.max(data, function(d) { return d.days; })]);
+    x.domain(data.map(function(d) { return d.year; }));
+    y.domain([0, d3.max(data, function(d) { return d.days; })]);
 
     g.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
-		
 	
 	g.append("text")             
       .attr("transform","translate(" + (width/2) + " ," +(height + margin.top + 20) + ")")
@@ -119,39 +118,34 @@ d3.csv("cap.csv", function(error, data) {
 	  .text("Year");
 
     g.append("g")
-        .attr("class", "axis axis--y")
-        .call(d3.axisLeft(y).ticks(5).tickFormat(function(d) { return d; }))
+      	.attr("class", "axis axis--y")
+      	.call(d3.axisLeft(y).ticks(5).tickFormat(function(d) { return d; }))
       .append("text")
-        .attr("class", "axis-title")
         .attr("transform", "rotate(-90)")
-        .attr("y", -55)
-		.attr("x",0 - (height / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-		.attr("fill", "black")
-		.attr("font-family", "Georgia")
-		.attr("font-size", "12px")
-        .text("Number of days to reach H1B cap limit");
+        .attr("y", -50)
+        .attr("dy", "0.71em")
+        .attr("text-anchor", "center")
+        .attr("fill", "black")
+        .text("No of days to reach the cap");
 
         
 
-    g.append("path")
-      	.datum(data)
-		.attr("class", "line")
-        .attr("d", line)
-		
-	g.selectAll(".text")  		
-	  .data(data)
-	  .enter()
-	  .append("text")
-	  .attr("class","label")
-	  .attr("x", (function(d) { return x(d.year)+4; }  ))
-	  .attr("y", function(d) { return y(d.days) - 18; })
-	  .attr("dy", ".75em")
-	  .attr("fill", "Black")
-	  .style("font-size", "14px") 
-	  .text(function(d) { return d.days;});
-    
+    g.selectAll(".bar")
+      	.data(data)
+      .enter().append("rect")
+        .attr("x", function(d) { return x(d.year); })
+        .attr("y", function(d) { return y(d.days); })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(d.days); })
+        .attr("fill","#377eb8" )
+		.on("mousemove", function(d){
+            tooltip
+              .style("left", d3.event.pageX - 50 + "px")
+              .style("top", d3.event.pageY - 70 + "px")
+              .style("display", "inline-block")
+              .html((d.year) + "<br>" + "No of days to reach the cap limit: " + (d.days));
+        })
+    		.on("mouseout", function(d){ tooltip.style("display", "none");});
 			
 	g.selectAll(".text")  		
 	  .data(data)
@@ -162,13 +156,11 @@ d3.csv("cap.csv", function(error, data) {
 	  .attr("y", function(d) { return y(d.days) - 40; })
 	  .attr("dy", ".75em")
 	  .attr("fill", "#E8336D")
-	  .style("font-size", "14px")
+	  .style("font-size", "12px")
 	  .text(function(d) { return d.text; });
 	  
-	  		
+		
     });
-	
-
 
 
 
