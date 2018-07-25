@@ -184,7 +184,7 @@ d3.csv("Top10Job.csv", function(error, data) {
 	  .attr("y", function(d) { return y(d.count) + 1; })
 	  .attr("dy", ".75em")
 	  .attr("fill", "white")
-	  .style("font-size", "10px") 
+	  .style("font-size", "12px") 
 	  .text(function(d) { return d.perc+"%"; });
 	  
 	   g.selectAll(".text")  		
@@ -196,7 +196,7 @@ d3.csv("Top10Job.csv", function(error, data) {
 	  .attr("y", function(d) { return y(d.count) - 32; })
 	  .attr("dy", ".75em")
 	  .attr("fill", "#E8336D")
-	  .style("font-size", "14px")
+	  .style("font-size", "10px")
 	  .text(function(d) { return d.text; });
 	  
 	g.selectAll("line.arrow")
