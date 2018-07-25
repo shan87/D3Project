@@ -59,12 +59,6 @@ rect:hover {
   
 <body> 
 
-<div class="alert alert-info" role="alert">
-<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-<span aria-hidden="true">&times;</span></button>
-<strong></strong> Tooltips are available. Use your mouse to hover over any bar on the chart to see its tooltip.
-</div>
-
 <h1>2017 - H1B Application Analysis</h1>
 
 <div class="areausage">
@@ -81,6 +75,12 @@ rect:hover {
   <a href="top10job.html">&rang;</a>
 
 </div>
+</div>
+
+<div class="alert alert-info" role="alert">
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+<span aria-hidden="true">&times;</span></button>
+<strong></strong> Tooltips are available. Use your mouse to hover over any bar on the chart to see its tooltip.
 </div>
 
 <h4 align="center">Top 10 H1B Applicants - 2017</h4>
@@ -187,7 +187,7 @@ d3.csv("Top10.csv", function(error, data) {
 	  .attr("y", function(d) { return y(d.count) - 40; })
 	  .attr("dy", ".75em")
 	  .attr("fill", "#E8336D")
-	  .style("font-size", "14px")
+	  .style("font-size", "10px")
 	  .text(function(d) { return d.text; });
 	  
 	g.selectAll("line.arrow")
