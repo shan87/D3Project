@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+  
+<body"> 
+
+<h1>2017 - H1B Application Analysis</h1>
+
+
+<div class="navigation">
+
+<div class="pagination">
+  <a href="ByState.html">&lang;</a>
+  <a href="index.html">Overview</a>
+  <a href="top10.html">Top 10 Applicants</a>
+  <a href="top10job.html">Top 10 JobType</a>
+  <a href="ByState.html">H1B by State</a>
+  <a class="active" href="#">About the Visualization</a>
+  
+  
+</div>
+</div>
+
+
+<div class="text">
+           <h2>About the Visualization</h2>
+             <p>This project is based on hybrid interactive slide show.
+			 Guidance is provided on each slide, but the users are free to drill down and list some details that they might be interested on or they can choose just to continue.
+			 </p>
+                <p>This project has been developed using D3 libraries, HTML, CSS and SVG.</p>
+				
+				<h3>Scenes</h3>
+				<p>This project is created as slides in order to keep coherence and make it user-friendly.
+				Each scene is a single chart with a specific goal related to the same subject and in a specific order to best convey the message.
+				Each slide has similar template, fonts, hue and tooltip to provide visual consistency on scene.
+				
+				<h3>Annotations</h3>
+                <p>Annotations are provided in appropriate places in each chart, which is highlighted in different color 
+				  and a tooltip, when mouse is hovered over the data points of each chart.
+				  The legend and labels along the X and Y axis provides additional annotations for the chart.
+				  </p>
+				
+				<h3>Triggers</h3>
+                <p>The menu items along with the prev and next button in the navigation bar of each page enable the User Interface events.
+				The mouse click acts as a trigger event for navigation.
+				User interacts by clicking on the button or menu items to navigate to various part of this story.
+				The mouse hover is another user interface event. The hover event triggers the display of tooltip in all the bar charts and map.
+				As mouse moves from one data point to another, changes in X and Y position causes the display of data related to that position and the current selection is indicated by the change in opacity.
+                </p>                
+                               
+				<h3>Parameters</h3>
+                <p>The name of the target slide is passed as an input paramter to the button and navgiation bar items.
+				Based on the user selection, appropriate data is filtered and respective slide with appropriate chart for the scene is displayed. 
+				The active slide is highlighted in dark grey, so that the user is aware of which slide they are currently in.
+
+</div>
+
+
+
+</body> 
+
+</html>
