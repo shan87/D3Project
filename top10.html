@@ -46,11 +46,6 @@ rect:hover {
   border-radius:5px;
 }
 
-label {
-  position: absolute;
-  top: 100px;
-  right: 70px;
-}
 </style>
   
  <head>
@@ -91,9 +86,6 @@ label {
 
 <h4 align="center">Top 10 H1B Applicants - 2017</h4>
 
-<div>
-<label><input type="checkbox"> Sort values</label>
-</div>
 <div id="container" class="svg-container">
 <svg width="1" height="1">
 <defs>
@@ -218,42 +210,6 @@ d3.csv("Top10.csv", function(error, data) {
             })
             .attr("marker-end","url(#arrow)");
 			
-d3.select("input").on("change", change);
-
-  var sortTimeout = setTimeout(function() {
-    d3.select("input").property("checked", true).each(change);
-  }, 2000);
-
-  function change() {
-    clearTimeout(sortTimeout);
-
-    // Copy-on-write since tweens are evaluated after a delay.
-    var x0 = x.domain(data.sort(this.checked
-        ? function(a, b) { return b.count - a.count; }
-        : function(a, b) { return d3.ascending(a.title, b.title); })
-        .map(function(d) { return d.title; }))
-        .copy();
-
-    g.selectAll(".bar")
-        .sort(function(a, b) { return x0(a.title) - x0(b.title); });
-
-    var transition = g.transition().duration(750),
-        delay = function(d, i) { return i * 50; };
-	
-	transition.selectAll(".bar")
-        .delay(delay)
-        .attr("x", function(d) { return x0(d.title); });
-
-    transition.select(".axis.axis--x")
-        .call(d3.axisBottom(x))
-      .selectAll("g")
-        .delay(delay);
-	transition.selectAll(".text")
-	.delay(delay)
-	.attr("x", (function(d) { return x0(d.title); }  ))
-	.attr("y", function(d) { return y0(d.count) - 40; });
-	
-  }
 			
 			
     });
