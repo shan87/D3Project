@@ -93,6 +93,21 @@ label {
 <label><input type="checkbox">Click to Sort by Count</label>
 
 <div id="container" class="svg-container">
+<svg width="1" height="1">
+<defs>
+    <marker
+      id="arrow"
+      markerUnits="strokeWidth"
+      markerWidth="12"
+      markerHeight="12"
+      viewBox="0 0 12 12"
+      refX="6"
+      refY="6"
+      orient="auto">
+      <path d="M2,2 L10,6 L2,10 L6,6 L2,2" style="fill: #f00;"></path>
+    </marker>
+  </defs>
+</svg>
 </div>
 
 <script>
@@ -169,10 +184,41 @@ d3.csv("Top10Job.csv", function(error, data) {
         })
     		.on("mouseout", function(d){ tooltip.style("display", "none");});
 			
+	   g.selectAll(".text")  		
+	  .data(data)
+	  .enter()
+	  .append("text")
+	  .attr("class","annotation")
+	  .attr("x", (function(d) { return x(d.title); }  ))
+	  .attr("y", function(d) { return y(d.count) - 32; })
+	  .attr("dy", ".75em")
+	  .attr("fill", "#E8336D")
+	  .style("font-size", "10px")
+	  .text(function(d) { return d.text; });
+
+    g.selectAll("line.arrow")
+        .data(data.filter(function(d) { return d.count == 4957; }))
+        .enter().append("line")
+            .attr("class", "arrow")
+            .attr("x1", function (d) {
+                return x(d.title)+x.bandwidth()/2;
+            })
+            .attr("x2", function (d) {
+                return x(d.title)+x.bandwidth()/2;
+            })
+            .attr("y2", function (d) {
+                return y(d.count) - 20;
+            })
+            .attr("y1", function (d) {
+                return y(d.count);
+            })
+            .attr("marker-end","url(#arrow)");	  
+		
+			
 d3.select("input").on("change", change);
 
   var sortTimeout = setTimeout(function() {
-    d3.select("input").property("checked", TRUE).each(change);
+    d3.select("input").property("checked", false).each(change);
   }, 2000);
 
   function change() {
@@ -199,6 +245,42 @@ d3.select("input").on("change", change);
         .call(d3.axisBottom(x))
       .selectAll("g")
         .delay(delay);
+		
+	g.selectAll("text.annotation")
+	      .data(data)
+          .transition()
+          .delay(600)
+          .text(function(d) {
+            return d.text;
+          })
+          .attr("x", function(d) {
+            return x(d.title)-17;
+          })
+          .attr("y", function(d) {
+            return y(d.count)-32;
+          })
+          .attr("dy", ".75em")
+		  .attr("fill", "#E8336D")
+		  .style("font-size", "10px");
+		  
+	    g.selectAll("line.arrow")
+        .data(data.filter(function(d) { return d.count == 4957; }))
+        .transition()
+        .delay(600)
+            .attr("class", "arrow")
+            .attr("x1", function (d) {
+                return x(d.title)+x.bandwidth()/2;
+            })
+            .attr("x2", function (d) {
+                return x(d.title)+x.bandwidth()/2;
+            })
+            .attr("y2", function (d) {
+                return y(d.count) - 20;
+            })
+            .attr("y1", function (d) {
+                return y(d.count);
+            })
+            .attr("marker-end","url(#arrow)");
   }
     });
 	
