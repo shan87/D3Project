@@ -46,6 +46,12 @@ rect:hover {
   border-radius:5px;
 }
 
+label {
+  position: absolute;
+  top: 100px;
+  right: 70px;
+}
+
 </style>
   
  <head>
@@ -85,6 +91,8 @@ rect:hover {
 </div>
 
 <h4 align="center">Top 10 H1B Applicants - 2017</h4>
+
+<label><input type="checkbox">Click to Sort by Count</label>
 
 <div id="container" class="svg-container">
 <svg width="1" height="1">
@@ -184,7 +192,7 @@ d3.csv("Top10.csv", function(error, data) {
 	  .data(data)
 	  .enter()
 	  .append("text")
-	  .attr("class","label")
+	  .attr("class","annotation")
 	  .attr("x", (function(d) { return x(d.title); }  ))
 	  .attr("y", function(d) { return y(d.count) - 40; })
 	  .attr("dy", ".75em")
@@ -209,6 +217,74 @@ d3.csv("Top10.csv", function(error, data) {
                 return y(d.count);
             })
             .attr("marker-end","url(#arrow)");
+			
+	d3.select("input").on("change", change);
+
+  var sortTimeout = setTimeout(function() {
+    d3.select("input").property("checked", false).each(change);
+  }, 2000);
+
+  function change() {
+    clearTimeout(sortTimeout);
+
+    // Copy-on-write since tweens are evaluated after a delay.
+    var x0 = x.domain(data.sort(this.checked
+        ? function(a, b) { return b.count - a.count; }
+        : function(a, b) { return d3.ascending(a.title, b.title); })
+        .map(function(d) { return d.title; }))
+        .copy();
+
+    g.selectAll(".bar")
+        .sort(function(a, b) { return x0(a.title) - x0(b.title); });
+
+    var transition = svg.transition().duration(750),
+        delay = function(d, i) { return i * 50; };
+
+    transition.selectAll(".bar")
+        .delay(delay)
+        .attr("x", function(d) { return x0(d.title); });
+
+    transition.select(".axis.axis--x")
+        .call(d3.axisBottom(x))
+      .selectAll("g")
+        .delay(delay);
+		
+	g.selectAll("text.annotation")
+	      .data(data)
+          .transition()
+          .delay(600)
+          .text(function(d) {
+            return d.text;
+          })
+          .attr("x", function(d) {
+            return x(d.title)-17;
+          })
+          .attr("y", function(d) {
+            return y(d.count)-32;
+          })
+          .attr("dy", ".75em")
+		  .attr("fill", "#E8336D")
+		  .style("font-size", "10px");
+		  
+	    g.selectAll("line.arrow")
+        .data(data.filter(function(d) { return d.count == 6096; }))
+        .transition()
+        .delay(600)
+            .attr("class", "arrow")
+            .attr("x1", function (d) {
+                return x(d.title)+x.bandwidth()/2;
+            })
+            .attr("x2", function (d) {
+                return x(d.title)+x.bandwidth()/2;
+            })
+            .attr("y2", function (d) {
+                return y(d.count) - 20;
+            })
+            .attr("y1", function (d) {
+                return y(d.count);
+            })
+            .attr("marker-end","url(#arrow)");
+  }
 			
 			
 			
